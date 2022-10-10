@@ -7,9 +7,16 @@
 
       body,
       section {
-        width: 800px;
-        height: 418px;
+        width: 1200px;
+        height: 687px;
         position: relative;
+
+        font-family: Menlo, Fira Code, Monaco, Lucida Console, Liberation Mono,
+        DejaVu Sans Mono, Bitstream Vera Sans Mono, Courier New, monospace,
+        serif;
+
+        background-color: #181818;
+        color: #f9f5d7;
       }
 
       body.debug .text {
@@ -25,12 +32,21 @@
       }
 
       .rectangle {
+
         position: absolute;
-        top: 10px;
-        right: 10px;
-        bottom: 10px;
-        left: 10px;
-        border: 3px solid #000;
+  
+        --spacing: 15px;
+
+        top: var(--spacing);
+        right: var(--spacing);
+        bottom: var(--spacing);
+        left: var(--spacing);
+
+        border: 10px solid;
+        border-image-slice: 1;
+        border-width: 5px;
+        border-image-source: linear-gradient(to left, #743ad5, #d53a9d);
+      
       }
 
       .container {
@@ -39,8 +55,10 @@
         right: 30px;
         left: 30px;
         bottom: 30px;
-        display: flex;
-        flex-direction: column;
+        /* display: flex;
+        flex-direction: column; */
+
+        padding: 1.2rem;
       }
 
       .text {
@@ -50,16 +68,33 @@
 
       .domain {
         margin-top: 30px;
-        font-size: 22px;
-      }
-
-      .domain:empty {
-        display: none;
+        font-size: 2rem;
       }
 
       .spy {
-        font-size: 16px;
-        display: inline-block;
+        display: block;
+        color: #ff97cb;
+
+        line-height: 1.2;
+
+        font-weight: bold;
+        font-size: 5rem;
+      }
+
+      .sep {
+        margin-left: 0 1rem;
+      }
+
+      .date {
+        opacity: 0.6;
+      }
+
+      .btmright {
+        position: absolute;
+        bottom: 1rem;
+        right: 1rem;
+        font-size: 1.5rem;
+        color: #ff97cb;
       }
     </style>
   </head>
@@ -72,37 +107,20 @@
         <div class="text">
           <div class="spy">|text|</div>
         </div>
-        <div class="domain">|footer|</div>
+        <div class="domain">
+          <span class="footer" id="footer">
+            |footer|
+          </span>
+          <span class="sep">-</span>
+          <span class="date" id="date">
+            |date|
+          </span>
+        </div>
+
+        <div class="btmright">
+          |btmright|
+        </div>
       </div>
     </section>
   </body>
-
-  <script>
-    function updateSize() {
-      const wrapper = document.querySelector('.text').getBoundingClientRect()
-      const text = document.querySelector('.spy')
-      let inside = true
-      let size = 16
-
-      while (inside) {
-        const pos = text.getBoundingClientRect()
-        const height = pos.height
-        const width = pos.width
-
-        if (height > wrapper.height || width > wrapper.width) {
-          inside = false
-          size -= 1
-        } else {
-          size += 1
-        }
-
-        text.style.fontSize = size + 'px'
-        text.style.lineHeight = size * 0.9 + 'px'
-      }
-    }
-
-    ;(function () {
-      updateSize()
-    })()
-  </script>
 </html>

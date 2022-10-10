@@ -18,45 +18,13 @@ app.get('/img/:text?/:footer?', async function(req, res) {
     const template = req.query.tpl || 'default'
     const maxLength = 200
 
-    // check text
-    if (!req.params.text) {
-        res.status(400).send('Missing text parameter')
-        return
-    }
-    let text = req.params.text
-    // valid base64 ?
-    if (!isBase64(text)) {
-        res.status(400).send('Invalid base64 for text parameter')
-        return
-    }
-    text = Buffer.from(text, 'base64').toString().trim().replaceAll('\n', '<br />')
-    if (text.length > maxLength) text = text.substring(0, maxLength) + '...'
-
-    // check footer
-    let footer = req.params.footer
-    if (footer) {
-        if (!isBase64(footer)) {
-            res.status(400).send('Invalid base64 for footer parameter')
-            return
-        }
-        footer = Buffer.from(footer, 'base64').toString()
-        if (footer.length > maxLength) footer = footer.substring(0, maxLength) + '...'
-    } else {
-        footer = ''
-    }
-
-    console.log('Rendering...')
-    console.log('→ Text:', text)
-    console.log('→ Footer:', footer)
-
-    // debug
-    //text = "AutoTube now supports IPFS"
-
     const raw = await getTemplate(template)
 
-    const params = {
-        text,
-        footer
+    let params = req.query;
+    for (const [key, value] of Object.entries(params)) {
+        if (value.length > maxLength) {
+            params[key] = value.slice(0, maxLength - 3) + "...";
+        }
     }
 
     const html = compileTemplate(raw, params, {
